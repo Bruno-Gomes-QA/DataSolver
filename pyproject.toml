@@ -1,0 +1,50 @@
+[project]
+name = "datasolver"
+version = "0.1.0"
+description = "DataSolver é uma biblioteca Python que facilita a modelagem e resolução de problemas de otimização com conexão ao bancos de dados, permitindo a definição intuitiva de variáveis, objetivos e restrições"
+packages = [
+    { include = "datasolver" }
+]
+authors = [
+    {name = "Bruno-Gomes-QA",email = "bruno.gomes.qa@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12, <4.0"
+
+dependencies = [
+    "sqlacodegen (>=3.0.0,<4.0.0)"
+]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+pytest-cov = "^6.0.0"
+blue = "^0.9.1"
+isort = "^6.0.1"
+taskipy = "^1.14.1"
+
+
+[tool.poetry.group.doc.dependencies]
+mkdocs-material = "^9.6.7"
+mkdocstrings = "^0.28.2"
+mkdocstrings-python = "^1.16.2"
+jinja2 = "^3.1.5"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.init_options]
+pythonpath = "."
+addopts = "--doctest-modules"
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.taskipy.tasks]
+lint = "blue . && isort ."
+docs = "mkdocs serve"
+pre_test = "task lint"
+test = "pytest -s -x --cov=datalchemy -vv"
+post_test = "coverage html"
+
