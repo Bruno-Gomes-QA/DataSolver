@@ -22,12 +22,18 @@ blue = "^0.9.1"
 isort = "^6.0.1"
 taskipy = "^1.14.1"
 
-
 [tool.poetry.group.doc.dependencies]
 mkdocs-material = "^9.6.7"
 mkdocstrings = "^0.28.2"
 mkdocstrings-python = "^1.16.2"
 jinja2 = "^3.1.5"
+
+[tool.poetry.extras]
+postgresql = ["psycopg2-binary"]
+mysql = ["pymysql", "mysqlclient"]
+oracle = ["cx-oracle"]
+mssql = ["pyodbc"]
+all = ["psycopg2-binary", "pymysql", "mysqlclient", "cx-oracle", "pyodbc"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -47,4 +53,5 @@ docs = "mkdocs serve"
 pre_test = "task lint"
 test = "pytest -s -x --cov=datalchemy -vv"
 post_test = "coverage html"
+
 
