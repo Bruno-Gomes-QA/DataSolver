@@ -1,7 +1,18 @@
 """
-Módulo para gerenciar as Conexões
+🔗 ***Módulo para Gerenciar Conexões de Banco de Dados***
 
-Gerencie as conexões com múltiplos bancos de dados.
+📌 **O que faz?**  
+
+Gerencia conexões com múltiplos bancos de dados usando SQLAlchemy.
+
+✅ **Principais recursos:**  
+
+- Suporte a múltiplos bancos de dados 🏦  
+- Criação e gerenciamento de conexões simultâneas 🔄  
+- Fácil integração com SQLAlchemy 🐍  
+- Verificação automática de drivers necessários ⚠️  
+- Conexão e transações seguras 🔒  
+
 """
 
 from importlib import util
@@ -16,35 +27,29 @@ from sqlalchemy.orm.session import Session
 
 class DatabaseConfig(BaseModel):
     """
-    Configuração para Conexão com Banco de Dados
+    ⚙️ **Configuração para Conexão com Banco de Dados**  
 
-    Crie configurações para conectar-se a diferentes bancos de dados.:
+    📌 **O que faz?**  
+    Define os parâmetros necessários para conectar-se a diferentes bancos de dados.  
 
-    Args:
-        name: Um nome único para sua conexão (ex: 'meu_banco_heroi')
-        dialect: Dialeto SQLAlchemy + driver (ex: 'mysql+pymysql', 'postgresql+psycopg2')
-        database: Nome do banco de dados
-        username: Seu usuário (não necessário para SQLite)
-        password: Senha (não necessário para SQLite)
-        host: Endereço do servidor (não necessário para SQLite)
-        port: Porta de acesso (1-65535, não necessário para SQLite)
-        pool_size: Quantidade de conexões simultâneas (padrão: 5)
-        max_overflow: Conexões extras para momentos de pico (padrão: 10)
+    🔥 **Principais recursos:**  
+    - Suporte a vários dialetos SQL 🎯  
+    - Validação automática de configurações ✅  
+    - Fácil integração com SQLAlchemy 🐍  
 
-    Exemplos de Dialetos:
-        - 🐘 PostgreSQL: postgresql+psycopg2
-        - 🐬 MySQL: mysql+pymysql
-        - 🏺 Oracle: oracle+cx_oracle
-        - 🏰 SQL Server: mssql+pyodbc
-        - 🧪 SQLite: sqlite (não precisa de driver)
+    **Exemplos de Dialetos:**  
+    - 🐘 PostgreSQL: `postgresql+psycopg2`  
+    - 🐬 MySQL: `mysql+pymysql`  
+    - 🏺 Oracle: `oracle+cx_oracle`  
+    - 🏰 SQL Server: `mssql+pyodbc`  
+    - 🧪 SQLite: `sqlite://`  
 
-    Para cada dialeto deve ser feita a instalação do driver correspondente. Disponibilizamos grupos de dependências para facilitar a instalação:
-    
+    ⚡ **Instalação de dependências por dialeto:**
     ```bash
-    pip install datasolver[postgresql]
-    pip install datasolver[mysql]
-    pip install datasolver[oracle]
-    pip install datasolver[mssql]
+    pip install datasolver[postgresql]  # PostgreSQL
+    pip install datasolver[mysql]       # MySQL
+    pip install datasolver[oracle]      # Oracle
+    pip install datasolver[mssql]       # SQL Server
     ```
     """
 
@@ -61,14 +66,18 @@ class DatabaseConfig(BaseModel):
 
 class DatabaseConnectionManager:
     """
-    Gerenciador de Conexões - Gerencia múltiplos bancos de dados.
+    🔌 **Gerenciador de Conexões com Banco de Dados**  
 
-    Args:
-        connections: Dicionário de conexões ativas
-        configs: Lista de configurações validadas
+    📌 **O que faz?**  
+    Permite criar e gerenciar múltiplas conexões com bancos de dados SQL.  
 
-    Exemplo:
+    ✅ **Principais recursos:**  
+    - Suporte a múltiplas conexões simultâneas 🏦  
+    - Gerenciamento automático de sessões 🔄  
+    - Fechamento seguro de conexões 🔒  
+    - Verificação de drivers necessários ⚠️  
 
+    🔥 **Exemplo de uso:**  
     ```python
     config = {
         'name': 'meu_banco',
@@ -95,16 +104,22 @@ class DatabaseConnectionManager:
 
     def __init__(self, configs: List[Dict]):
         """
-        Inicia a classe, com as conexões fornecidas
+        🚀 **Inicializa o gerenciador de conexões**
 
-        Args:
-            configs: Lista de configurações de conexão
+        🔹 **O que faz?**  
+        - Valida as configurações e inicia as conexões com os bancos de dados.
 
-        Raises:
-            ValueError: Se alguma configuração estiver incorreta
-            ImportError: Se faltar algum driver necessário
+        🛠️ **Parâmetros:**  
+        - `configs` (List[Dict]): Lista de configurações de conexão.  
 
-        Dica: Instale grupos de dependências com pip install datasolver[dialeto]
+        ⚠️ **Possíveis exceções:**  
+        - `ValueError`: Se a configuração estiver incorreta.  
+        - `ImportError`: Se o driver necessário não estiver instalado.  
+
+        📝 **Dica:** Para instalar os drivers, use:  
+        ```bash
+        pip install datasolver[dialeto]
+        ```
         """
         self.connections: Dict[str, Dict] = {}
         self.configs: List[DatabaseConfig] = []
@@ -114,23 +129,21 @@ class DatabaseConnectionManager:
                 validated_config = DatabaseConfig(**config)
                 self.add_connection(validated_config)
             except ValidationError as e:
-                raise ValueError(f'Configuração inválida: {e}') from e
+                raise ValueError(f'⚠️ Configuração inválida: {e}') from e
 
     def add_connection(self, config: DatabaseConfig):
         """
-        Adiciona uma nova conexão
+        ➕ **Adiciona uma nova conexão**
 
-        Args:
-            config: Configuração validada do banco de dados
+        🛠️ **Parâmetros:**  
+        - `config` (DatabaseConfig): Configuração validada do banco de dados.  
 
-        Raises:
-            ImportError: Se o driver necessário não estiver instalado
-            ValueError: Se o nome da conexão já existir
+        ⚠️ **Possíveis exceções:**  
+        - `ImportError`: Se o driver necessário não estiver instalado.  
+        - `ValueError`: Se o nome da conexão já existir.  
         """
         if config.name in self.connections:
-            raise ValueError(
-                f"A conexão '{config.name}' já existe! Escolha outro nome"
-            )
+            raise ValueError(f"⚠️ A conexão '{config.name}' já existe! Escolha outro nome.")
 
         self._check_driver_installation(config.dialect)
         connection_url = self._build_connection_url(config)
@@ -143,19 +156,19 @@ class DatabaseConnectionManager:
         self.configs.append(config)
 
     def get_session(self, name: str) -> Session:
-        """Retorna uma sessão ativa para consultas e transações."""
+        """🔄 **Obtém uma sessão ativa para consultas e transações.**"""
         if name not in self.connections:
-            raise ValueError(f"Conexão '{name}' não encontrada")
+            raise ValueError(f"⚠️ Conexão '{name}' não encontrada.")
         return self.connections[name]['session_factory']()
 
     def get_engine(self, name: str) -> Engine:
-        """Retorna a engine SQLAlchemy de uma conexão específica."""
+        """🛠️ **Obtém a engine SQLAlchemy de uma conexão específica.**"""
         if name not in self.connections:
-            raise ValueError(f"Conexão '{name}' não encontrada")
+            raise ValueError(f"⚠️ Conexão '{name}' não encontrada.")
         return self.connections[name]['engine']
 
     def close_all_connections(self):
-        """Fecha todas as conexões abertas."""
+        """❌ **Fecha todas as conexões abertas de forma segura.**"""
         for name in list(self.connections.keys()):
             self.connections[name]['engine'].dispose()
             self.connections[name]['session_factory'].close_all()
@@ -163,7 +176,7 @@ class DatabaseConnectionManager:
             del self.connections[name]
 
     def _build_connection_url(self, config: DatabaseConfig) -> str:
-        """Constrói a URL de conexão SQLAlchemy."""
+        """🔗 **Constrói a URL de conexão SQLAlchemy.**"""
         return URL.create(
             drivername=config.dialect,
             username=config.username,
@@ -174,7 +187,11 @@ class DatabaseConnectionManager:
         )
 
     def _check_driver_installation(self, dialect: str):
-        """Verifica se os pacotes necessários estão instalados."""
+        """
+        🔍 **Verifica se os pacotes necessários para o dialeto estão instalados.**
+
+        ⚠️ **Se um driver estiver ausente, sugere o comando de instalação.**
+        """
         base_dialect = dialect.split('+')[0].lower()
         required = self.DIALECT_REQUIREMENTS.get(base_dialect, [])
 
@@ -182,9 +199,9 @@ class DatabaseConnectionManager:
             if not util.find_spec(package):
                 install_cmd = f'pip install datasolver[{base_dialect}]'
                 raise ImportError(
-                    f'Driver necessário: {package}\n'
-                    f'Fórmula de instalação: {install_cmd}\n'
-                    f'Dialeto usado: {dialect}'
+                    f"⚠️ Driver necessário: {package}\n"
+                    f"💡 Instale com: {install_cmd}\n"
+                    f"🛠️ Dialeto usado: {dialect}"
                 )
 
     def __enter__(self):
