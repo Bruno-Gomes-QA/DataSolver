@@ -1,0 +1,19 @@
+site_name: DataSolver
+repo_url: https://github.com/Bruno-Gomes-QA/datasolver
+repo_name: Bruno-Gomes-QA/datasolver
+edit_uri: tree/master/docs
+
+theme:
+  name: material
+  language: pt-BR
+  logo: assets/_DATASOLVER.png
+  favicon: assets/_DATASOLVER.png
+
+markdown_extensions:
+  - attr_list
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [datasolver]
